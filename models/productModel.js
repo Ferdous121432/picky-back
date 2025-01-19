@@ -22,6 +22,10 @@ const productSchema = new mongoose.Schema({
     default: 300,
     required: [true, 'A product must have a price'],
   },
+  old_price: {
+    type: Number,
+    default: 700,
+  },
   description: {
     type: String,
     required: [true, 'A product must have a description'],
@@ -41,6 +45,11 @@ const productSchema = new mongoose.Schema({
   images: {
     type: [String],
     required: [true, 'A product must have images'],
+  },
+  color: {
+    type: String,
+    required: [true, 'A product must have a color'],
+    default: 'black',
   },
   product_spec: [
     {
