@@ -105,15 +105,26 @@ exports.getProductsByCategory = catchAsync(async (req, res, next) => {
     return next(new AppError('Please provide a category ID', 400));
   }
 
-  const category_id = await Category.findOne({ slug: categorySlug });
+  const category = await Category.findOne({ slug: categorySlug });
+  const category_id = category._id;
+  console.log(category_id);
 
-  const products = await Product.find({ categories: category_id });
+  const products = await new APIFeatures(
+    Product.find({ categories: category_id }),
+    req.query,
+  )
+    .filter()
+    .sort()
+    .limitFields()
+    .pagination().query;
+
+  // const products = await Product.find({ categories: category_id });
 
   if (!products.length) {
     // return next(new AppError('No products found for this category', 404));
-    res.status(200).json({
+    return res.status(200).json({
       status: 'success',
-      message: 'No products found for this category',
+      message: `No products found for ${categorySlug} category,`,
     });
   }
 
@@ -138,10 +149,14 @@ exports.getProductsByCategory = catchAsync(async (req, res, next) => {
     });
   }
   const totalProducts = await Product.countDocuments();
+  const pageNumbers = Math.ceil(totalProducts / req.query.limit);
+  const currentPage = req.query.page * 1 || 1;
 
   res.status(200).json({
     status: 'success',
     totalLength: totalProducts,
+    pageNumbers,
+    currentPage,
     results: products.length,
     data: {
       products,
