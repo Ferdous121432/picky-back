@@ -2,7 +2,7 @@ const CartItem = require('../models/cartItemModel');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 
-const allowedFields = ['quantity,subtotal'];
+const allowedFields = ['quantity'];
 
 exports.getMyCart = catchAsync(async (req, res, next) => {
   req.body.user_id = req.user.id;
