@@ -28,9 +28,9 @@ const cartItemSchema = new mongoose.Schema({
     type: String,
     // required: true,
   },
-  subtotal: {
-    type: Number,
-    required: true,
+  image: {
+    type: String,
+    // required: true,
   },
   product_spec: {
     sizes: {

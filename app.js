@@ -65,6 +65,7 @@ app.use((req, res, next) => {
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
   res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins
+
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS'); // Allow specific methods
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow specific headers
   next();
@@ -89,8 +90,26 @@ app.use((err, req, res, next) => {
   }
 });
 
+// app.use((req, res, next) => {
+//   const nonce = generateNonce();
+//   res.setHeader(
+//     'Content-Security-Policy',
+//     `script-src 'self' 'wasm-unsafe-eval' 'inline-speculation-rules' 'nonce-${nonce}';`,
+//   ); // Include the nonce
+//   res.locals.nonce = nonce; // Make the nonce available in your templates/views
+//   next();
+// });
+
 // Set security HTTP headers
 app.use(helmet());
+// helmet.contentSecurityPolicy({
+//   useDefaults: true,
+//   directives: {
+//     'img-src': ["'self'", 'https: data:'],
+//     'media-src': ['*', "'self'", 'https:', 'data:'],
+//     'connect-src': ["'self'", 'https://js.stripe.com/v3'],
+//   },
+// });
 
 // Development logging
 if (process.env.NODE_ENV === 'development') {
