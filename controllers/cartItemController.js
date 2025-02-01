@@ -1,6 +1,7 @@
 const CartItem = require('../models/cartItemModel');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
+const AppError = require('../utils/appError');
 
 const allowedFields = ['quantity'];
 
@@ -73,53 +74,46 @@ exports.createCartItem = catchAsync(async (req, res, next) => {
 });
 
 // allowables fields are the fields that can be updated by the user
-// const filterObj = (obj, allowedFields) => {
-//   let newObject = {};
+const filterObj = (obj) => {
+  const allowedFields = ['quantity'];
+  let newObject = {};
 
-//   if (!allowedFields) newObject = obj;
+  if (!allowedFields) newObject = obj;
 
-//   if (allowedFields)
-//     Object.keys(obj).forEach((el) => {
-//       if (allowedFields.includes(el)) newObject[el] = obj[el];
-//     });
+  if (allowedFields)
+    Object.keys(obj).forEach((el) => {
+      if (allowedFields.includes(el)) newObject[el] = obj[el];
+    });
 
-//   return newObject;
-// };
+  return newObject;
+};
 
-// exports.updateCartItem = () =>
-//   catchAsync(async (req, res, next) => {
-//     const filteredBody = filterObj(req.body, allowedFields);
+exports.updateCartItem = catchAsync(async (req, res, next) => {
+  const filteredBody = filterObj(req.body);
 
-//     filteredBody.updated_at = Date.now();
+  filteredBody.updated_at = Date.now();
 
-//     const cartItem = await CartItem.findByIdAndUpdate(
-//       {
-//         user_id: req.user.id,
-//         product_id: req.body.product_id,
-//       },
-//       filteredBody,
-//       {
-//         new: true,
-//         runValidators: true,
-//       },
-//     );
+  const doc = await CartItem.findByIdAndUpdate(req.params.id, filteredBody, {
+    new: true,
+    runValidators: true,
+  });
 
-//     if (!cartItem) {
-//       return next(new AppError('No document found with that ID', 404));
-//     }
+  if (!doc) {
+    return next(new AppError('No document found with that ID', 404));
+  }
 
-//     res.status(200).json({
-//       status: 'success',
-//       data: {
-//         cartItem,
-//       },
-//     });
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: doc,
+    },
+  });
 
-//     console.log(req.body);
-//   });
+  console.log(req.body);
+});
 
 exports.getAllCartItems = factory.getAll(CartItem);
 exports.getCartItem = factory.getOne(CartItem);
 // exports.createCartItem = factory.createOne(CartItem);
-exports.updateCartItem = factory.updateOne(CartItem, allowedFields);
+// exports.updateCartItem = factory.updateOne(CartItem, ['quantity']);
 exports.deleteCartItem = factory.deleteOne(CartItem);
