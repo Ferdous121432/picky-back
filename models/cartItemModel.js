@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { default: slugify } = require('slugify');
 
 //TODO updated at and created at should be updated automatically  when the cart item is updated or created  respectively
 
@@ -20,6 +21,10 @@ const cartItemSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  slug: {
+    type: String,
+    required: true,
+  },
   price: {
     type: Number,
     required: true,
@@ -31,6 +36,9 @@ const cartItemSchema = new mongoose.Schema({
   image: {
     type: String,
     // required: true,
+  },
+  size: {
+    type: String,
   },
   product_spec: {
     sizes: {

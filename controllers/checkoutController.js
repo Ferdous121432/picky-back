@@ -10,7 +10,7 @@ const factory = require('./handlerFactory');
 const User = require('../models/userModel');
 
 const stripe = require('stripe')(
-  'sk_test_51Q8ouGIeuxFSv7HPlr9sfndE1pFAldh7omOqoAd44Lquoh0PcZbKLS1p267wdRlk9kfdMo4rPlZOri9fsJdY7ojU00VEDXXFI0',
+  'sk_test_51QnyemI8jHUIhJ27luC4acJXl1DwmIuWUrySXP7aQ7JwjO7B6bNWidiDWshpp5RyImQaMOobLnVDOwQzE2NOIGPE00WbdqCFNS',
 );
 // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
@@ -44,8 +44,8 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
-    success_url: `http://localhost:5173/product/671bebcf7da7532191669b7c`,
-    cancel_url: `http://localhost:5173/product`,
+    success_url: `http://localhost:5173`,
+    cancel_url: `http://localhost:5173`,
     customer_email: req.user.email,
     mode: 'payment',
     invoice_creation: {
@@ -172,7 +172,7 @@ exports.webhookCheckout = async (req, res, next) => {
     event = stripe.webhooks.constructEvent(
       req.body,
       signature,
-      'whsec_wrdzJEWFaq8SmQVulxa3XW4AliW9AsJb',
+      'whsec_cdec2d8068ff296201aad5edc864428f4a3e8a6b64a289137adfaa0874632e28',
       // process.env.STRIPE_WEBHOOK_SECRET,
     );
   } catch (err) {

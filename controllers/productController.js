@@ -133,18 +133,19 @@ exports.getProductsByCategory = catchAsync(async (req, res, next) => {
     products.map((product) => {
       if (product.images) {
         product.images = product.images.map((image) => {
-          return `${req.protocol}://${req.get('host')}/img/products/images/${image}`.replace(
-            'http:',
-            'https:',
-          );
+          return `${req.protocol}://${req.get('host')}/img/products/images/${image}`;
+          // .replace(
+          //   'http:',
+          //   'https:',
+          // );
         });
       }
       if (product.imageCover) {
-        product.imageCover =
-          `${req.protocol}://${req.get('host')}/img/products/cover-image/${product.imageCover}`.replace(
-            'http:',
-            'https:',
-          );
+        product.imageCover = `${req.protocol}://${req.get('host')}/img/products/cover-image/${product.imageCover}`;
+        // .replace(
+        //   'http:',
+        //   'https:',
+        // );
       }
     });
   }

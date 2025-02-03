@@ -102,14 +102,23 @@ app.use((err, req, res, next) => {
 
 // Set security HTTP headers
 app.use(helmet());
-// helmet.contentSecurityPolicy({
-//   useDefaults: true,
-//   directives: {
-//     'img-src': ["'self'", 'https: data:'],
-//     'media-src': ['*', "'self'", 'https:', 'data:'],
-//     'connect-src': ["'self'", 'https://js.stripe.com/v3'],
-//   },
-// });
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      'script-src': [
+        "'self'",
+        "'sha256-lbU2xf8sKFm1dCrsJ2t1ps10s7gdmSeM679my0eS9nU='",
+        "'wasm-unsafe-eval'",
+        "'inline-speculation-rules'",
+        'https://js.stripe.com/v3',
+      ],
+      'img-src': ["'self'", 'https: data:'],
+      'media-src': ['*', "'self'", 'https:', 'data:'],
+      'connect-src': ["'self'", 'https://js.stripe.com/v3'],
+    },
+  }),
+);
 
 // Development logging
 if (process.env.NODE_ENV === 'development') {
@@ -125,10 +134,14 @@ const limiter = rateLimit({
 
 app.use('/api', limiter);
 
+// Stripe webhook, BEFORE body-parser, because stripe needs the body as stream
+// Stripe webhook, BEFORE body-parser, because stripe needs the body as stream
 app.post(
   '/webhook-checkout',
   express.raw({ type: 'application/json' }),
-  checkoutController.webhookCheckout,
+  (req, res, next) => {
+    checkoutController.webhookCheckout(req, res, next);
+  },
 );
 
 // Body parser, reading data from body into req.body
@@ -163,13 +176,6 @@ app.get('/', (req, res) => {
     message: 'Varsel check route is working!',
   });
 });
-
-// Stripe webhook, BEFORE body-parser, because stripe needs the body as stream
-// app.post(
-//   '/webhook-checkout',
-//   express.raw({ type: 'application/json' }),
-//   checkoutController.webhookCheckout,
-// );
 
 // 3) ROUTES
 app.use('/api/v1/users', userRouter);
