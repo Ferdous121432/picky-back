@@ -45,7 +45,7 @@ const app = express();
 
 const corsOptions = {
   // origin: 'allow',
-  origin: 'https://shopperoo-frontend.vercel.app',
+  origin: 'https://picky-front.vercel.app',
   // origin: 'http://localhost:5173',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   modules: 'GET,HEAD,PUT,PATCH,POST,DELETE',
