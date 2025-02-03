@@ -133,19 +133,18 @@ exports.getProductsByCategory = catchAsync(async (req, res, next) => {
     products.map((product) => {
       if (product.images) {
         product.images = product.images.map((image) => {
-          return `${req.protocol}://${req.get('host')}/img/products/images/${image}`;
-          // .replace(
-          //   'http:',
-          //   'https:',
-          // );
+          return `${req.protocol}://${req.get('host')}/img/products/images/${image}`.replace(
+            'http:',
+            'https:',
+          );
         });
       }
       if (product.imageCover) {
-        product.imageCover = `${req.protocol}://${req.get('host')}/img/products/cover-image/${product.imageCover}`;
-        // .replace(
-        //   'http:',
-        //   'https:',
-        // );
+        product.imageCover =
+          `${req.protocol}://${req.get('host')}/img/products/cover-image/${product.imageCover}`.replace(
+            'http:',
+            'https:',
+          );
       }
     });
   }
@@ -178,33 +177,6 @@ exports.getProduct = Factory.getOne(Product);
 exports.createProduct = Factory.createOne(Product);
 exports.updateProduct = Factory.updateOne(Product);
 exports.deleteProduct = Factory.deleteOne(Product);
-
-exports.searchProducts = catchAsync(async (req, res, next) => {
-  const searchTerm = req.query.q;
-
-  if (!searchTerm) {
-    return next(new AppError('Please provide a search term', 400));
-  }
-
-  const products = await Product.find({
-    $text: { $search: searchTerm },
-  });
-
-  if (!products.length) {
-    return res.status(200).json({
-      status: 'success',
-      message: 'No products found matching your search criteria',
-    });
-  }
-
-  res.status(200).json({
-    status: 'success',
-    results: products.length,
-    data: {
-      products,
-    },
-  });
-});
 
 // exports.getTourStats = catchAsync(async (req, res, next) => {
 //   const stats = await Tour.aggregate([
