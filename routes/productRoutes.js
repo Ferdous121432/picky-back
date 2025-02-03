@@ -34,4 +34,7 @@ router
 // New route to get products by category
 router.route('/category/:slug').get(productController.getProductsByCategory);
 
+// New route to get products by search term
+router.route('/search').get(productController.searchProducts);
+
 module.exports = router;
