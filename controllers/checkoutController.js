@@ -44,8 +44,10 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
-    success_url: `http://localhost:5173`,
-    cancel_url: `http://localhost:5173`,
+    // success_url: `http://localhost:5173`,
+    // cancel_url: `http://localhost:5173`,
+    success_url: `https://picky-front.vercel.app`,
+    cancel_url: `https://picky-front.vercel.app`,
     customer_email: req.user.email,
     mode: 'payment',
     invoice_creation: {
@@ -172,7 +174,7 @@ exports.webhookCheckout = async (req, res, next) => {
     event = stripe.webhooks.constructEvent(
       req.body,
       signature,
-      'whsec_cdec2d8068ff296201aad5edc864428f4a3e8a6b64a289137adfaa0874632e28',
+      'whsec_rVXFD4sr9fOekmWYmXMOHnhRahlxd83w',
       // process.env.STRIPE_WEBHOOK_SECRET,
     );
   } catch (err) {
