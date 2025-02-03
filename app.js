@@ -49,7 +49,7 @@ const corsOptions = {
   // origin: 'http://localhost:5173',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   modules: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Allow credentials (cookies, etc.)
+  credentials: true, // Allow credentials (cookies, etc.)/
 };
 
 app.use(cors(corsOptions));
